@@ -1,7 +1,8 @@
 drop database if exists hms;
 create database hms;
 use hms;
-create table roles(
+create table role
+(
     roleID int primary key auto_increment,
     roleName varchar(25) not null,
     roleDescription varchar(100) not null
@@ -13,16 +14,16 @@ create table user(
     Phone varchar(25) not null,
     Address varchar(100) not null,
     username varchar(50) not null,
-    passwordHash varchar(50) not null,
+    passwordHash varchar(60) not null,
     roleID int not null,
-    foreign key(roleID) references roles(roleID)
+    foreign key(roleID) references role (roleID)
 );
 create table patient(
     patientID int primary key auto_increment,
     firstName varchar(25) not null,
     lastName varchar(25) not null,
     dateOfBirth date not null ,
-    gender varchar(10) not null,
+    gender ENUM('Male','Female') not null,
     Phone varchar(25) not null,
     Address varchar(100) not null
 );
@@ -33,7 +34,7 @@ create table appointment(
     appointmentDate date not null,
     appointmentTime time not null,
     appointmentDescription varchar(100) not null,
-    status varchar(25) not null,
+    status ENUM('Scheduled', 'Completed') not null,
     foreign key(patientID) references patient(patientID),
     foreign key(userID) references user(userID)
 );
@@ -42,7 +43,7 @@ create table visit(
     visitDate date not null,
     visitTime time not null,
     Diagnosis varchar(100) not null,
-    status varchar(25) not null,
+    status ENUM('Scheduled', 'Completed') not null,
     appointmentID int not null,
     foreign key(appointmentID) references appointment(appointmentID)
 );
@@ -56,7 +57,7 @@ create table test(
     testName varchar(25) not null,
     testDate date not null,
     testResult varchar(100) not null,
-    status varchar(25) not null,
+    status ENUM('Scheduled', 'Completed') not null,
     visitID int not null,
     typeID int not null,
     foreign key(visitID) references visit(visitID),
