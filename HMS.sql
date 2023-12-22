@@ -15,6 +15,7 @@ create table user(
     Address varchar(100) not null,
     username varchar(50) not null,
     passwordHash varchar(60) not null,
+    image varchar(100) not null,
     roleID int not null,
     foreign key(roleID) references role (roleID)
 );
