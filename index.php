@@ -17,25 +17,26 @@
         $req->bindValue(':username', $username);
         $req->execute();
         $user = $req->fetch();
-        if ($user) {
+        echo "<script>alert('".$user['status']."')</script>";
+        if ($user && $user['status'] !== 'active ') {
             if (password_verify($password, $user['passwordHash'])) {
                 $req_role = $con->prepare("SELECT * FROM role");
                 $req_role->execute();
                 $role = $req_role->fetchAll();
                 session_start();
                 foreach ($role as $r) {
-                    if ($r['id'] == $user['role_id']) {
+                    if ($r['roleID'] == $user['roleID']) {
                         $_SESSION['username'] = $user['username'];
                         $_SESSION['role'] = $r['roleName'];
                         $_SESSION['role_id'] = $r['roleID'];
-                        header('Location: ./'.$r['roleName'].'/dashboard.php');
+                        header('Location: '.$r['roleName'].'/dashboard.php');
                     }
                 }
             } else {
                 echo "<script>alert('Wrong password')</script>";
             }
         } else {
-            echo "<script>alert('Wrong username')</script>";
+            echo "<script>alert('Wrong username or cancelled')</script>";
         }
     }
 ?>
