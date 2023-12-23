@@ -128,3 +128,14 @@ create table vitalDetails(
     foreign key(checkupID) references dailycheckup(checkupID),
     primary key(vitalID,checkupID)
 );
+
+insert into role(roleName,roleDescription) values('Admin','Admin'),
+                                                 ('Doctor','Doctor'),
+                                                 ('Nurse','Nurse'),
+                                                 ('Receptionist','Receptionist'),
+                                                 ('Pharmacist','Pharmacist'),
+                                                 ('Lab Technician','Lab Technician'),
+                                                 ('Radiologist','Radiologist')
+                                                 ;
+insert into user(firstName,lastName,Phone,Address,username,passwordHash,image,roleID)
+values('jhon','doe','0625658456','Admin','admin','$2y$10$YYDQwvKyNxVyyqxURB3L6eUEzNVIAss8CNzusM2ata0wzFsG8.XHS','Admin.jpg',1);
