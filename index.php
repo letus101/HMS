@@ -27,6 +27,7 @@
                 foreach ($role as $r) {
                     if ($r['roleID'] == $user['roleID']) {
                         $_SESSION['username'] = $user['username'];
+                        $_SESSION['id']= $user['userID'];
                         $_SESSION['role'] = $r['roleName'];
                         $_SESSION['role_id'] = $r['roleID'];
                         header('Location: '.$r['roleName'].'/dashboard.php');

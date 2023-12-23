@@ -9,7 +9,7 @@ if (!($_SESSION['role'] == 'Admin')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGN IN</title>
+    <title>DASHBOARD</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 
@@ -19,6 +19,9 @@ if (!($_SESSION['role'] == 'Admin')) {
 </header>
 <div>
     <?php require '../Assets/components/adminmenu.php'?>
+    <div class="container w-full">
+    <p class="text-center text-2xl font-bold text-gray-800 dark:text-white">Welcome <?= $_SESSION['username'] ?></p>
+</div>
 </div>
 
 <script src="../node_modules/preline/dist/preline.js"></script>
