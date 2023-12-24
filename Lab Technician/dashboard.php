@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!($_SESSION['role'] == 'Lab Technician')) {
-    header('location: ../error404.php');
+    header('location: ../error403.php');
     exit();
 }
 ?>

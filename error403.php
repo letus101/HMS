@@ -21,7 +21,7 @@
     </header>
 
     <div class="text-center py-10 px-4 sm:px-6 lg:px-8">
-        <h1 class="block text-9xl font-bold text-gray-800 sm:text-9xl dark:text-white">404</h1>
+        <h1 class="block text-9xl font-bold text-gray-800 sm:text-9xl dark:text-white">403</h1>
         <h1 class="block text-2xl font-bold text-white"></h1>
         <p class="mt-3 text-gray-600 dark:text-gray-400">Oops, something went wrong.</p>
         <p class="text-gray-600 dark:text-gray-400">Sorry, you are not allowed here.</p>

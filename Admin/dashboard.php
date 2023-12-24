@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!($_SESSION['role'] == 'Admin')) {
-    header('location: ../error404.php');
+    header('location: ../error403.php');
     exit();
 }
 require_once '../config/cnx.php';
