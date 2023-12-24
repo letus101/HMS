@@ -1,3 +1,10 @@
+<?php
+ session_start();
+ if (!isset($_SESSION['role'])){
+     $location = 'index.php';
+ } else{
+     $location = $_SESSION['role'].'/dashboard.php';}   ;
+?>
 <head>
     <meta charset="UTF-8">
     <title>404</title>
@@ -9,7 +16,7 @@
 <div class="max-w-[50rem] flex flex-col mx-auto w-full h-full">
     <header class="mb-auto flex justify-center z-50 w-full py-4">
         <nav class="px-4 sm:px-6 lg:px-8" aria-label="Global">
-            <a class="flex-none text-xl font-semibold sm:text-3xl dark:text-white" href="#" aria-label="Brand">Hospitalink</a>
+            <a class="flex-none text-xl font-semibold sm:text-3xl dark:text-white" href="index.php" aria-label="Brand">Hospitalink</a>
         </nav>
     </header>
 
@@ -19,7 +26,7 @@
         <p class="mt-3 text-gray-600 dark:text-gray-400">Oops, something went wrong.</p>
         <p class="text-gray-600 dark:text-gray-400">Sorry, you are not allowed here.</p>
         <div class="mt-5 flex justify-center items-center">
-            <a href="index.php" class="ml-5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Go Back</a>
+            <a href="<?=$location?>" class="ml-5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Go Back</a>
         </div>
 
     </div>
