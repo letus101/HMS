@@ -35,7 +35,7 @@ create table appointment(
     appointmentDate date not null,
     appointmentTime time not null,
     appointmentDescription varchar(100) not null,
-    status ENUM('Scheduled', 'Completed') not null,
+    status ENUM('Scheduled', 'Completed','Canceled') not null,
     foreign key(patientID) references patient(patientID),
     foreign key(userID) references user(userID)
 );
