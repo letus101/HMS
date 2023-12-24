@@ -8,7 +8,7 @@
 </head>
 <body class="dark:bg-slate-900 bg-gray-100 flex h-full items-center py-16">
 <?php
-    require './config/cnx.php';
+    require_once './config/cnx.php';
     $con = cnx_pdo();
     if (isset($_POST['signin']) && !empty($_POST['username']) && !empty($_POST['password'])) {
         $username = $_POST['username'];
@@ -17,8 +17,7 @@
         $req->bindValue(':username', $username);
         $req->execute();
         $user = $req->fetch();
-        echo "<script>alert('".$user['status']."')</script>";
-        if ($user && $user['status'] !== 'active ') {
+        if ($user && $user['status'] === 'active') {
             if (password_verify($password, $user['passwordHash'])) {
                 $req_role = $con->prepare("SELECT * FROM role");
                 $req_role->execute();

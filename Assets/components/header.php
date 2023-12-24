@@ -1,5 +1,5 @@
 <?php
-    require '../config/cnx.php';
+    require_once '../config/cnx.php';
     $con = cnx_pdo();
     $req = $con->prepare("SELECT * FROM user WHERE username = :username");
     $req->bindValue(':username', $_SESSION['username']);
@@ -7,6 +7,7 @@
     $user = $req->fetch();
 
 ?>
+<header class="sticky top-0 inset-x-0 flex flex-wrap sm:justify-start sm:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 sm:py-4 lg:ps-64 dark:bg-gray-800 dark:border-gray-700">
 <nav class="flex basis-full items-center w-full mx-auto px-4 sm:px-6 md:px-8" aria-label="Global">
     <div class="me-5 lg:me-0 lg:hidden">
         <a class="flex-none text-xl font-semibold dark:text-white" href="#" aria-label="Brand">HOSPITALINK</a>
@@ -42,3 +43,4 @@
         </div>
     </div>
 </nav>
+</header>
