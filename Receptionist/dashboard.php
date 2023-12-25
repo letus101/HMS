@@ -9,8 +9,8 @@ require_once '../config/cnx.php';
 $con = cnx_pdo();
 
 if (isset($_POST['addPatient'])) {
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
+    $firstName = strtolower($_POST['firstName']);
+    $lastName = strtolower($_POST['lastName']);
     $dateOfBirth = $_POST['dateOfBirth'];
     $gender = $_POST['gender'];
     $phone = $_POST['phone'];
