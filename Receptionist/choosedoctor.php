@@ -57,8 +57,8 @@ if (isset($_POST['addAppointment'])) {
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
     <form action="validate.php" method="post">
         <div>
-            <label> doctor
-                <select name="doctor">
+            <label class="block text-2xl mb-2 dark:text-white"> available doctors :
+                <select name="doctor" class="mt-1.5 py-3 px-4 pe-9 block w-full border-gray-200 rounded-full text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
                     <?php
                     foreach ($doctors as $doctor) { // Loop through all doctors
                         echo "<option value='".$doctor['userID']."'>".$doctor['firstName']." ".$doctor['lastName']."</option>";
