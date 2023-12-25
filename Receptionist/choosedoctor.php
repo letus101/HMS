@@ -36,7 +36,8 @@ if (isset($_POST['addAppointment'])) {
         exit();
     }
 }
-    $req = $con->prepare("Select * FROM user WHERE roleID = 2 AND status = 'active' AND userID NOT IN (SELECT userID FROM appointment WHERE appointmentTime = :appointmentTime)");
+    $req = $con->prepare("Select * FROM user WHERE roleID = 2 AND status = 'active' AND userID NOT IN (SELECT userID FROM appointment WHERE appointmentTime = :appointmentTime AND appointmentDate = :appointmentDate)");
+    $req->bindValue(':appointmentDate', $appointmentDate);
     $req->bindValue(':appointmentTime', $appointmentTime);
     $req->execute();
     $doctors = $req->fetchAll();
