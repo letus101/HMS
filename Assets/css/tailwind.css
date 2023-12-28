@@ -1209,6 +1209,10 @@ select {
   margin-top: 1.25rem;
 }
 
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
 .mt-7 {
   margin-top: 1.75rem;
 }
@@ -1219,10 +1223,6 @@ select {
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
 }
 
 .box-border {
@@ -2552,11 +2552,6 @@ select {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-red-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -2998,6 +2993,11 @@ select {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
+}
+
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 .text-gray-500 {
