@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!($_SESSION['role'] == 'Lab Technician')) {
+if (!($_SESSION['role'] == 'Nurse')) {
     header('location: ../error403.php');
     exit();
 }
@@ -10,12 +10,12 @@ if (!($_SESSION['role'] == 'Lab Technician')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <title>CHECK UP</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 dark:bg-slate-900">
 <?php require '../Assets/components/header.php'?>
-<?php require '../Assets/components/labtechmenu.php'?>
+<?php require '../Assets/components/nursemenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
 
 </div>
