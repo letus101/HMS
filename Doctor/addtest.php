@@ -11,15 +11,19 @@ $req->execute();
 $types = $req->fetchAll();
 $visitID = $_SESSION['visitID'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if(isset($_POST['submit'])){
+    $numTests = $_POST['numTests'];
     $testTypes = $_POST['testType'];
-    $departments = $_POST['department'];
-    foreach ($testTypes as $i => $testType) {
-        $req = $con->prepare("INSERT INTO test (status,visitID,typeID) VALUES ('Scheduled',:visitID,:typeID)");
-        $req->bindValue(':visitID', $visitID);
-        $req->bindValue(':typeID', $testType);
+    $str = 'Scheduled';
+    for($i = 0; $i < $numTests; $i++) {
+        $req = $con->prepare("insert into test (visitID, typeID,status) values (:visitID,:typeID,:status)");
+        $req->bindParam(':visitID', $visitID);
+        $req->bindParam(':typeID', $testTypes[$i]);
+        $req->bindParam(':status', $str);
         $req->execute();
     }
+    header('location: ../Doctor/dashboard.php');
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -37,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form method="post" action="addtest.php">
         Number of tests: <input type="number" id="numTests" name="numTests" min="1" onchange="addFields()"><br>
         <div id="testFields"></div>
-        <input type="submit">
+        <input type="submit" name="submit">
     </form>
 </div>
 <script>
@@ -46,11 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         container.innerHTML = "";
         var numTests = document.getElementById("numTests").value;
         for (var i = 0; i < numTests; i++) {
-            var label1 = document.createElement("label");
-            label1.innerHTML = "Test " + (i + 1) + " name:";
-            var input1 = document.createElement("input");
-            input1.type = "text";
-            input1.name = "testName[" + i + "]";
             var label2 = document.createElement("label");
             label2.innerHTML = "Test " + (i + 1) + " type:";
             var select = document.createElement("select");
@@ -61,8 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             option.text = "<?= $type['typeName'] ?>";
             select.appendChild(option);
             <?php endforeach; ?>
-            container.appendChild(label1);
-            container.appendChild(input1);
             container.appendChild(label2);
             container.appendChild(select);
         }
