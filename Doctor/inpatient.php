@@ -6,19 +6,19 @@ if (!($_SESSION['role'] == 'Doctor')) {
 }
 require_once '../config/cnx.php';
 $con = cnx_pdo();
-$doctorID = $_SESSION['id'];
-$patientID = $_SESSION['patientID'];
-$visitID = $_SESSION['visitID'];
-$req = $con->prepare("INSERT INTO inpatient (patientID, admissionDate) VALUES (:patientID, :admissionDate)");
-$req->bindValue(':patientID', $patientID);
-$req->bindValue(':admissionDate', date('Y-m-d'));
-$req->execute();
-
 $req = $con->prepare("SELECT drug.*, SUM(s.quantity) as totalQuantity FROM drug JOIN hms.stock s on drug.drugID = s.drugID WHERE s.expiryDate > CURDATE() GROUP BY s.drugID HAVING totalQuantity > 0");
 $req->execute();
 $drugs = $req->fetchAll();
 
 if (isset($_POST['addPrescription'])) {
+    $doctorID = $_SESSION['id'];
+    $patientID = $_SESSION['patientID'];
+    $visitID = $_SESSION['visitID'];
+    $req = $con->prepare("INSERT INTO inpatient (patientID, admissionDate) VALUES (:patientID, :admissionDate)");
+    $req->bindValue(':patientID', $patientID);
+    $req->bindValue(':admissionDate', date('Y-m-d'));
+    $req->execute();
+
     $drugs = $_POST['drugs'];
     $doses = $_POST['dose'];
     $frequencies = $_POST['frequency'];
@@ -43,7 +43,20 @@ if (isset($_POST['addPrescription'])) {
         $req->bindValue(':dose', $doses[$drug]);
         $req->bindValue(':frequency', $frequencies[$drug]);
         $req->execute();
+
+        $req = $con->prepare("SELECT * FROM stock WHERE drugID = :drugID AND expiryDate > CURDATE() AND quantity > 0 ORDER BY expiryDate LIMIT 1");
+        $req->bindValue(':drugID', $drug);
+        $req->execute();
+        $batch = $req->fetch();
+
+        $newQuantity = $batch['quantity'] - 1;
+
+        $req = $con->prepare("UPDATE stock SET quantity = :quantity WHERE stockID = :batchID");
+        $req->bindValue(':quantity', $newQuantity);
+        $req->bindValue(':batchID', $batch['stockID']);
+        $req->execute();
     }
+
     if ($test) {
         header('location: addtest.php');
     }
