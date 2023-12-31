@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inpatient_id'], $_POS
         $req->bindValue(':value', $value);
         $req->execute();
     }
-    echo "Daily checkup recorded successfully.";
 }
 ?>
 <!DOCTYPE html>

@@ -15,7 +15,7 @@ $req = $con->prepare("
         SELECT d.inpatientID
         FROM dailycheckup d
         WHERE DATE(d.checkupDate) = CURDATE()
-    )
+    ) AND inpatient.status = 'Admitted'
 ");
 $req->execute();
 $inpatients = $req->fetchAll();
