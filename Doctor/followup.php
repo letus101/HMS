@@ -97,6 +97,17 @@ if (isset($_POST['submit']) && isset($_POST['inpatients'])) {
             $req->bindValue(':visit_id', $visit_id);
             $req->execute();
             $tests = $req->fetchAll();
+
+            $req = $con->prepare("
+                SELECT dailycheckup.*, v.*, v2.vitalName
+                FROM dailycheckup JOIN hms.vitaldetails v on dailycheckup.checkupID = v.checkupID
+                JOIN hms.vitals v2 on v2.vitalID = v.vitalID
+                WHERE inpatientID = :inpatient_id AND checkupDate >= :admission_date
+            ");
+            $req->bindValue(':inpatient_id', $inpatient_id);
+            $req->bindValue(':admission_date', $inp['admissionDate']);
+            $req->execute();
+            $vitals = $req->fetchAll();
         } else {
             echo "No prescription found for the selected inpatient.";
         }
@@ -141,10 +152,8 @@ if (isset($_POST['submit']) && isset($_POST['inpatients'])) {
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit Prescription</button>
                 </form>
             <?php } ?>
-
             <h2>Diagnosis</h2>
             <p><?= $diagnosis['diagnosis'] ?></p>
-
             <h2>Tests</h2>
             <?php foreach ($tests as $test) { ?>
                 <p>Test ID: <?= $test['typeName'] ?></p>
@@ -153,6 +162,10 @@ if (isset($_POST['submit']) && isset($_POST['inpatients'])) {
                 <?php } elseif ($test['status'] == 'Completed') { ?>
                     <p>Test Result: <a href="<?= '../storage/tests/' . $test['testResult'] ?>"><?= $test['testResult'] ?></a></p>
                 <?php } ?>
+            <?php } ?>
+            <h2>Vitals</h2>
+            <?php foreach ($vitals as $vital) { ?>
+                <p><?= $vital['vitalName'] ?>: <?= $vital['vitalValue'] ?></p>
             <?php } ?>
         </div>
     <?php } ?>
