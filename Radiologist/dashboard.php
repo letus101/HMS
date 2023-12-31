@@ -7,8 +7,16 @@ if (!($_SESSION['role'] == 'Radiologist')) {
 require_once '../config/cnx.php';
 $con = cnx_pdo();
 
-// Modify the SQL query to select only the tests that have a status of 'Scheduled' and the type department is 'radiology'
-$req = $con->prepare("SELECT test.* FROM test JOIN type ON test.typeID = type.typeID WHERE test.status = 'Scheduled' AND type.department = 'radiology'");
+$req = $con->prepare("
+    SELECT test.*, type.typeName, concat(patient.firstName,' ',patient.lastName) AS patientName
+    FROM test 
+    JOIN type ON test.typeID = type.typeID 
+    JOIN visit ON test.visitID = visit.visitID
+    JOIN inpatient ON visit.visitDate = inpatient.admissionDate
+    JOIN patient ON inpatient.patientID = patient.patientID
+    WHERE test.status = 'Scheduled' AND type.department = 'radiology' 
+    ORDER BY test.testID
+");
 $req->execute();
 $tests = $req->fetchAll();
 ?>
@@ -27,15 +35,15 @@ $tests = $req->fetchAll();
     <table>
         <tr>
             <th>Test ID</th>
-            <th>Visit ID</th>
-            <th>Type ID</th>
+            <th>Patient Name</th>
+            <th>Type Name</th>
             <th>Status</th>
         </tr>
         <?php foreach ($tests as $test): ?>
             <tr>
                 <td><?= $test['testID'] ?></td>
-                <td><?= $test['visitID'] ?></td>
-                <td><?= $test['typeID'] ?></td>
+                <td><?= $test['patientName'] ?></td>
+                <td><?= $test['typeName'] ?></td>
                 <td><?= $test['status'] ?></td>
             </tr>
         <?php endforeach; ?>

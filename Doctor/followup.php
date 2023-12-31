@@ -27,34 +27,34 @@ $req->bindValue(':doctor_id', $doctor_id);
 $req->execute();
 $inpatients = $req->fetchAll();
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) && isset($_POST['inpatients'])) {
     $inpatient_id = $_POST['inpatients'];
     $req = $con->prepare("
-        SELECT inpatient.*, concat(patient.firstName,' ',patient.lastName) AS patientName
+        SELECT inpatient.*, concat(patient.firstName,' ',patient.lastName) AS patientName , patient.patientID
         FROM inpatient
         INNER JOIN patient ON inpatient.patientID = patient.patientID
         WHERE inpatient.inpatientID = :inpatient_id
     ");
     $req->bindValue(':inpatient_id', $inpatient_id);
     $req->execute();
-    $inpatient = $req->fetch();
-
+    $inp = $req->fetch();
     $req = $con->prepare("
-        SELECT visitID
-        FROM visit
-        WHERE visitDate = (
-            SELECT admissionDate
-            FROM inpatient
-            WHERE inpatientID = :inpatient_id
-        )
-    ");
-    $req->bindValue(':inpatient_id', $inpatient_id);
+    SELECT visitID
+    FROM visit
+    WHERE appointmentID = (
+        SELECT appointmentID
+        FROM appointment
+        WHERE patientID = :patient_id
+        ORDER BY appointmentDate DESC
+        LIMIT 1
+    )
+");
+    $req->bindValue(':patient_id', $inp['patientID']);
     $req->execute();
-    $visit = $req->fetch();
+    $visits = $req->fetchAll();
 
-    if ($visit) {
+    foreach ($visits as $visit) {
         $visit_id = $visit['visitID'];
-
         // Fetch the prescription ID
         $req = $con->prepare("
             SELECT prescriptionID
@@ -100,8 +100,6 @@ if (isset($_POST['submit'])) {
         } else {
             echo "No prescription found for the selected inpatient.";
         }
-    } else {
-        echo "No visit found for the selected inpatient.";
     }
 }
 ?>
@@ -127,11 +125,11 @@ if (isset($_POST['submit'])) {
         </select>
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" name="submit">Submit</button>
     </form>
-    <?php if (isset($inpatient) && isset($prescription_details) && isset($diagnosis) && isset($tests)) { ?>
+    <?php if (isset($inp) && isset($prescription_details) && isset($diagnosis) && isset($tests)) { ?>
         <div>
             <h2>Patient Information</h2>
-            <p>Name: <?= $inpatient['patientName'] ?></p>
-            <p>Admission Date: <?= $inpatient['admissionDate'] ?></p>
+            <p>Name: <?= $inp['patientName'] ?></p>
+            <p>Admission Date: <?= $inp['admissionDate'] ?></p>
 
             <h2>Prescription Details</h2>
             <?php foreach ($prescription_details as $detail) { ?>
