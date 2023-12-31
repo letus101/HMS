@@ -4,17 +4,16 @@ if (!($_SESSION['role'] == 'Radiologist')) {
     header('location: ../error403.php');
     exit();
 }
+
 require_once '../config/cnx.php';
 $con = cnx_pdo();
-
 $req = $con->prepare("
-    SELECT test.*, type.typeName, concat(patient.firstName,' ',patient.lastName) AS patientName
-    FROM test 
-    JOIN type ON test.typeID = type.typeID 
-    JOIN visit ON test.visitID = visit.visitID
-    JOIN inpatient ON visit.visitDate = inpatient.admissionDate
-    JOIN patient ON inpatient.patientID = patient.patientID
-    WHERE test.status = 'Scheduled' AND type.department = 'radiology' 
+    SELECT test.* , concat(p.firstName,' ',p.lastName) AS patientName , t.typeName
+    FROM test JOIN hms.visit v on v.visitID = test.visitID
+    JOIN hms.type t on t.typeID = test.typeID
+    JOIN hms.appointment a on v.appointmentID = a.appointmentID
+    JOIN hms.patient p on a.patientID = p.patientID
+    WHERE test.status = 'Scheduled' AND t.department = 'radiology'
     ORDER BY test.testID
 ");
 $req->execute();
@@ -36,7 +35,6 @@ $tests = $req->fetchAll();
         <tr>
             <th>Test ID</th>
             <th>Patient Name</th>
-            <th>Type Name</th>
             <th>Status</th>
         </tr>
         <?php foreach ($tests as $test): ?>

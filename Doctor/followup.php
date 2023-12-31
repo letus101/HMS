@@ -130,7 +130,6 @@ if (isset($_POST['submit']) && isset($_POST['inpatients'])) {
             <h2>Patient Information</h2>
             <p>Name: <?= $inp['patientName'] ?></p>
             <p>Admission Date: <?= $inp['admissionDate'] ?></p>
-
             <h2>Prescription Details</h2>
             <?php foreach ($prescription_details as $detail) { ?>
                 <p>Drug: <?= $detail['drugName'] ?></p>

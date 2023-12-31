@@ -8,15 +8,14 @@ if (!($_SESSION['role'] == 'Radiologist')) {
 require_once '../config/cnx.php';
 $con = cnx_pdo();
 
-// Fetch all the tests with status 'Scheduled'
 $req = $con->prepare("
-    SELECT test.*, type.typeName, concat(patient.firstName,' ',patient.lastName) AS patientName
-    FROM test
-    JOIN type ON test.typeID = type.typeID
-    JOIN visit ON test.visitID = visit.visitID
-    JOIN inpatient ON visit.visitDate = inpatient.admissionDate
-    JOIN patient ON inpatient.patientID = patient.patientID
-    WHERE test.status = 'Scheduled' AND type.department = 'radiology'
+    SELECT test.* , concat(p.firstName,' ',p.lastName) AS patientName , t.typeName
+    FROM test JOIN hms.visit v on v.visitID = test.visitID
+    JOIN hms.type t on t.typeID = test.typeID
+    JOIN hms.appointment a on v.appointmentID = a.appointmentID
+    JOIN hms.patient p on a.patientID = p.patientID
+    WHERE test.status = 'Scheduled' AND t.department = 'radiology'
+    ORDER BY test.testID
 ");
 $req->execute();
 $tests = $req->fetchAll();
@@ -52,15 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
         SELECT concat(patient.firstName,' ',patient.lastName) AS patientName
         FROM test
         JOIN visit ON test.visitID = visit.visitID
-        JOIN inpatient ON visit.visitDate = inpatient.admissionDate
-        JOIN patient ON inpatient.patientID = patient.patientID
+        JOIN appointment ON visit.appointmentID = appointment.appointmentID
+        JOIN patient ON appointment.patientID = patient.patientID
         WHERE test.testID = :test_id
     ");
     $req->bindValue(':test_id', $test_id);
     $req->execute();
     $patient = $req->fetch();
     // Rename the file
-    $new_filename = 'radiology' .$type['typeName'].$patient['patientName'].date('Ymd'). '.pdf';
+    $new_filename = 'radiology-'.$type['typeName']."-".$patient['patientName']."-".date('Ymd'). '.pdf';
     rename($destination, '../storage/tests/' . $new_filename);
 
     // Update the testResult, status, and testDate fields in the test table
