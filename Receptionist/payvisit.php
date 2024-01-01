@@ -82,6 +82,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
     $req->bindValue(':visit_id', $visitID);
     $req->execute();
 
+    //discharge the patient
+    $req = $con->prepare("
+        UPDATE inpatient
+        SET status = 'discharged'
+        WHERE patientID = :patient_id
+    ");
+    $req->bindValue(':patient_id', $patientID['patientID']);
+    $req->execute();
+
     echo "<script>alert('Total to pay: $total');</script>";
 }
 ?>

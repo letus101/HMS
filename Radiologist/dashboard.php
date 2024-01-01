@@ -10,10 +10,11 @@ $con = cnx_pdo();
 $req = $con->prepare("
     SELECT test.* , concat(p.firstName,' ',p.lastName) AS patientName , t.typeName
     FROM test JOIN hms.visit v on v.visitID = test.visitID
+    JOIN hms.visit v2 on v2.visitID = test.visitID
     JOIN hms.type t on t.typeID = test.typeID
     JOIN hms.appointment a on v.appointmentID = a.appointmentID
     JOIN hms.patient p on a.patientID = p.patientID
-    WHERE test.status = 'Scheduled' AND t.department = 'radiology'
+    WHERE test.status = 'Scheduled' AND t.department = 'radiology' AND  v2.paid ='no'
     ORDER BY test.testID
 ");
 $req->execute();
