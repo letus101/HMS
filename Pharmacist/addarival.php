@@ -17,10 +17,11 @@ if (isset($_POST['addArrival'])) {
     $quantity = $_POST['quantity'];
     $expiryDate = $_POST['expiryDate'];
 
-    $req = $con->prepare("INSERT INTO stock (drugID, quantity, expiryDate) VALUES (:drugID, :quantity, :expiryDate)");
+    $req = $con->prepare("INSERT INTO stock (drugID, quantity, expiryDate,arrivalDate) VALUES (:drugID, :quantity, :expiryDate,:arrivalDate)");
     $req->bindValue(':drugID', $drugID);
     $req->bindValue(':quantity', $quantity);
     $req->bindValue(':expiryDate', $expiryDate);
+    $req->bindValue(':arrivalDate', date('Y-m-d'));
     $req->execute();
     echo "<script>alert('New arrival added successfully.')</script>";
 }

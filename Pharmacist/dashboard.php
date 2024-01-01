@@ -10,14 +10,27 @@ if (!($_SESSION['role'] == 'Pharmacist')) {
 // Number of drugs
     $req = $con->query("SELECT COUNT(*) as count FROM drug");
     $drugCount = $req->fetch()['count'];
+    if ($drugCount == null) {
+        $drugCount = 0;
+    }
 
 // Total quantity of all drugs
     $req = $con->query("SELECT SUM(quantity) as total FROM stock");
     $totalQuantity = $req->fetch()['total'];
+    if ($totalQuantity == null) {
+        $totalQuantity = 0;
+    }
 
 // Number of expired drugs
 $req = $con->query("SELECT SUM(quantity) as total FROM stock WHERE expiryDate < CURDATE()");
 $expiredQuantity = $req->fetch()['total'];
+if ($expiredQuantity == null) {
+    $expiredQuantity = 0;
+}
+
+// name of expired drugs in an arrival
+$req = $con->query("SELECT drug.drugName, stock.expiryDate,stockID,arrivalDate FROM drug INNER JOIN stock ON drug.drugID = stock.drugId WHERE stock.expiryDate < CURDATE()");
+$expiredDrugs = $req->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full">
@@ -47,6 +60,29 @@ $expiredQuantity = $req->fetch()['total'];
             </div>
         </div>
     </div>
+    <table class="w-full mt-10 bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+        <tr class="text-gray-600 dark:text-gray-200 text-left text-sm font-bold uppercase tracking-wide">
+            <th class="px-4 py-3">Arrival ID</th>
+            <th class="px-4 py-3">Drug Name</th>
+            <th class="px-4 py-3">Expiry Date</th>
+            <th class="px-4 py-3">Arrival Date</th>
+            <th class="px-4 py-3">Action</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+        <?php foreach ($expiredDrugs as $expiredDrug): ?>
+            <tr class="text-gray-700 dark:text-gray-400">
+                <td class="px-4 py-3"><?= $expiredDrug['stockID'] ?></td>
+                <td class="px-4 py-3"><?= $expiredDrug['drugName'] ?></td>
+                <td class="px-4 py-3"><?= $expiredDrug['expiryDate'] ?></td>
+                <td class="px-4 py-3"><?= $expiredDrug['arrivalDate'] ?></td>
+                <td class="px-4 py-3">
+                    <a href="delete.php?id=<?= $expiredDrug['stockID'] ?>" class="text-red-600 hover:underline">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
 </body>
