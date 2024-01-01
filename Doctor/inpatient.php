@@ -61,7 +61,7 @@ if (isset($_POST['addPrescription'])) {
         header('location: addtest.php');
     }
     else {
-        header('location: dashboard.php');
+        header('location: dashboard.php?success=visit');
     }
 }
 ?>
@@ -72,29 +72,44 @@ if (isset($_POST['addPrescription'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DASHBOARD</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 </head>
 <body class="bg-gray-50 dark:bg-slate-900">
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/doctormenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form method="post" action="inpatient.php">
-        <label> Drugs :
-            <select id="drugs" name="drugs[]" multiple onchange="addFields()">
-                <?php foreach ($drugs as $drug): ?>
-                    <option value="<?= $drug['drugID'] ?>">
-                        <?= $drug['drugName'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </label>
-        <div id="drugFields"></div>
-        <label > do you need to add tests :
-            <input type="checkbox" name="test" placeholder="test" >
-        </label>
-        <button type="submit" name="addPrescription">Add Drugs</button>
+    <form method="post" action="inpatient.php" class="space-y-4">
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white">Select Drugs :
+                <select id="drugs" name="drugs[]" multiple class="w-full p-2 border border-gray-300 rounded bg-white text-gray-700 ">
+                    <?php foreach ($drugs as $drug): ?>
+                        <option value="<?= $drug['drugID'] ?>">
+                            <?= $drug['drugName'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        </div>
+        <div id="drugFields" class="mt-3"></div>
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Do you need to add tests :
+                <input type="checkbox" name="test" placeholder="test" class="p-2 border border-gray-300 rounded">
+            </label>
+        </div>
+        <div class="mt-3">
+            <button type="submit" name="addPrescription" class="p-2 bg-blue-500 text-white rounded">Add Drugs</button>
+        </div>
     </form>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
+    var choices = new Choices('#drugs', {
+        searchEnabled: true,
+        removeItemButton: true,
+    });
+
+    choices.passedElement.element.addEventListener('change', addFields, false);
+
     function addFields() {
         var select = document.getElementById("drugs");
         var container = document.getElementById("drugFields");
@@ -103,14 +118,18 @@ if (isset($_POST['addPrescription'])) {
             if (select.options[i].selected) {
                 var label1 = document.createElement("label");
                 label1.innerHTML = "Dose for " + select.options[i].text + ":";
+                label1.className = "block text-l mb-2 dark:text-white";
                 var input1 = document.createElement("input");
                 input1.type = "text";
                 input1.name = "dose[" + select.options[i].value + "]";
+                input1.className = "w-full p-2 border border-gray-300 rounded bg-white text-gray-700";
                 var label2 = document.createElement("label");
                 label2.innerHTML = "Frequency for " + select.options[i].text + ":";
+                label2.className = "block text-l mb-2 dark:text-white";
                 var input2 = document.createElement("input");
                 input2.type = "text";
                 input2.name = "frequency[" + select.options[i].value + "]";
+                input2.className = "w-full p-2 border border-gray-300 rounded bg-white text-gray-700";
                 container.appendChild(label1);
                 container.appendChild(input1);
                 container.appendChild(label2);

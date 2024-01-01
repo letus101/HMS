@@ -9,10 +9,13 @@ $con = cnx_pdo();
 $doctorID = $_SESSION['id']; // Assuming the doctor's ID is stored in the session
 $req = $con->prepare("SELECT appointment.*, CONCAT(patient.firstName, ' ', patient.lastName) as patientName FROM appointment
                       JOIN patient ON appointment.patientID = patient.patientID
-                      WHERE appointment.userID = :doctorID AND DATE(appointment.appointmentDate) = CURDATE()");
+                      WHERE appointment.userID = :doctorID  AND appointment.status = 'Scheduled'");
 $req->bindValue(':doctorID', $doctorID);
 $req->execute();
 $appointments = $req->fetchAll();
+if (isset($_GET['success']) && $_GET['success'] == 'visit') {
+    echo '<script>alert("Visit added successfully")</script>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full">
@@ -27,8 +30,8 @@ $appointments = $req->fetchAll();
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/doctormenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Upcoming appointments</h1>
     <div id='calendar'></div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
                 var calendarEl = document.getElementById('calendar');

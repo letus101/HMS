@@ -24,6 +24,7 @@ if (isset($_POST['modifyPassword'])) {
     $req->bindValue(':newPasswordHash', $newPasswordHash);
     $req->bindValue(':adminId', $adminId);
     $req->execute();
+    echo "<script>alert('Password modified successfully.');</script>";
 }
 ?>
 <!DOCTYPE html>
@@ -31,7 +32,7 @@ if (isset($_POST['modifyPassword'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <title>Modify admin password</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 
@@ -51,11 +52,16 @@ if (isset($_POST['modifyPassword'])) {
                 <input type="password" name="confirmPassword" id="confirmPassword" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Confirm Password" required>
             </div>
             <div class="mt-3">
-                <button type="submit" name="modifyPassword" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Modify Password</button>
+                <button onclick="return(confirmModification())" type="submit" name="modifyPassword" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Modify Password</button>
             </div>
         </form>
     </div>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
+<script>
+    function confirmModification() {
+        return confirm('Are you sure you want to modify the password?');
+    }
+</script>
 </body>
 </html>

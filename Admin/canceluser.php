@@ -14,6 +14,7 @@ if (isset($_POST['cancelUser'])) {
     $req = $con->prepare("UPDATE user SET status = 'canceled' WHERE username = :username ");
     $req->bindValue(':username', $username);
     $req->execute();
+    echo "<script>alert('User canceled successfully')</script>";
 }
 ?>
 
@@ -22,7 +23,7 @@ if (isset($_POST['cancelUser'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <title>Cancel user</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 
@@ -39,12 +40,17 @@ if (isset($_POST['cancelUser'])) {
                 <input type="text" name="username" id="username" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Username" required>
             </div>
             <div>
-                <button type="submit" name="cancelUser" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Cancel User</button>
+                <button onclick="return(confirmCancel())" type="submit" name="cancelUser" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Cancel User</button>
             </div>
         </form>
     </div>
 </div>
 
 <script src="../node_modules/preline/dist/preline.js"></script>
+<script>
+    function confirmCancel() {
+        return confirm('Are you sure you want to cancel this user?');
+    }
+</script>
 </body>
 </html>

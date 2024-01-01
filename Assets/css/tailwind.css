@@ -1352,26 +1352,6 @@ select {
   height: 100vh;
 }
 
-.h-\[2\.5rem\] {
-  height: 2.5rem;
-}
-
-.h-8 {
-  height: 2rem;
-}
-
-.h-\[3\.3rem\] {
-  height: 3.3rem;
-}
-
-.h-\[3rem\] {
-  height: 3rem;
-}
-
-.h-auto {
-  height: auto;
-}
-
 .w-4 {
   width: 1rem;
 }
@@ -1406,22 +1386,6 @@ select {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[2\.5rem\] {
-  width: 2.5rem;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
-.w-auto {
-  width: auto;
-}
-
-.w-\[3rem\] {
-  width: 3rem;
 }
 
 .min-w-\[15rem\] {
@@ -2046,6 +2010,18 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
+}
+
+.space-y-0\.5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.125rem * var(--tw-space-y-reverse));
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -2715,6 +2691,10 @@ select {
   padding: 0.5rem;
 }
 
+.p-3 {
+  padding: 0.75rem;
+}
+
 .p-4 {
   padding: 1rem;
 }
@@ -2907,11 +2887,6 @@ select {
   line-height: 2.5rem;
 }
 
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
-}
-
 .text-9xl {
   font-size: 8rem;
   line-height: 1;
@@ -3082,6 +3057,11 @@ select {
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+
+.text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .text-slate-700 {
@@ -3921,6 +3901,11 @@ select {
     background-color: rgb(17 24 39 / var(--tw-bg-opacity));
   }
 
+  .dark\:bg-slate-800 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+  }
+
   .dark\:bg-slate-900 {
     --tw-bg-opacity: 1;
     background-color: rgb(15 23 42 / var(--tw-bg-opacity));
@@ -3928,6 +3913,11 @@ select {
 
   .dark\:bg-opacity-80 {
     --tw-bg-opacity: 0.8;
+  }
+
+  .dark\:text-gray-100 {
+    --tw-text-opacity: 1;
+    color: rgb(243 244 246 / var(--tw-text-opacity));
   }
 
   .dark\:text-gray-200 {

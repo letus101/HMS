@@ -9,7 +9,7 @@ $con = cnx_pdo();
 $doctorID = $_SESSION['id'];
 $req = $con->prepare("SELECT appointment.*, CONCAT(patient.firstName, ' ', patient.lastName) as patientName FROM appointment
                       JOIN patient ON appointment.patientID = patient.patientID
-                      WHERE appointment.userID = :doctorID AND DATE(appointment.appointmentDate) = CURDATE() AND appointment.status = 'Scheduled'");
+                      WHERE appointment.userID = :doctorID AND DATE(appointment.appointmentDate) = CURDATE() AND appointment.status = 'Scheduled' ORDER BY appointment.appointmentTime");
 $req->bindValue(':doctorID', $doctorID);
 $req->execute();
 $appointments = $req->fetchAll();
@@ -36,7 +36,7 @@ if (isset($_POST['addvisit'])) {
         header('location: inpatient.php');
     }
     else {
-        header('location: dashboard.php');
+        header('location: dashboard.php?success=visit');
     }
 }
 ?>
@@ -52,24 +52,33 @@ if (isset($_POST['addvisit'])) {
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/doctormenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-<form method="post" action="addvisit.php">
-    <label> Appointment :
-        <select name="appointment">
-            <?php foreach ($appointments as $appointment): ?>
-                <option value="<?= $appointment['appointmentID'] ?>">
-                    <?= $appointment['patientName'] . ' - ' . $appointment['appointmentDate'].' - '.$appointment['appointmentTime'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </label>
-<label> Diagnosis :
-    <textarea name="diagnosis" class="preline"></textarea>
-</label>
-<label> Inpatient :
-    <input type="checkbox" name="inpatient" value="1">
-</label>
-    <button type="submit" name="addvisit">Add Visit</button>
-</form>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Visit details</h1>
+    <form method="post" action="addvisit.php" class="space-y-4">
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Select an Appointment :
+                <select name="appointment" class="p-3 border border-gray-300 rounded-l">
+                    <?php foreach ($appointments as $appointment): ?>
+                        <option value="<?= $appointment['appointmentID'] ?>">
+                            <?= $appointment['patientName'] . ' - ' . $appointment['appointmentDate'].' - '.$appointment['appointmentTime'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+        </div>
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Diagnosis : <br>
+                <textarea name="diagnosis" class="w-full p-2 border border-gray-300 rounded preline"></textarea>
+            </label>
+        </div>
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Inpatient :
+                <input type="checkbox" name="inpatient" value="1" class="p-2 border border-gray-300 rounded">
+            </label>
+        </div>
+        <div class="mt-3">
+            <button type="submit" name="addvisit" class="p-2 bg-blue-500 text-white rounded">Add Visit</button>
+        </div>
+    </form>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
 </body>

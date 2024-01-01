@@ -17,13 +17,12 @@ if (isset($_POST['modifyPassword'])) {
         echo "<script>alert('The new password and the retyped password do not match.');</script>";
         exit();
     }
-
     $newPasswordHash = password_hash($newPassword, PASSWORD_DEFAULT);
-
     $req = $con->prepare("UPDATE user SET passwordHash = :newPasswordHash WHERE username = :username");
     $req->bindValue(':newPasswordHash', $newPasswordHash);
     $req->bindValue(':username', $username);
     $req->execute();
+    echo "<script>alert('The password has been modified successfully.');</script>";
 }
 ?>
 
@@ -32,7 +31,7 @@ if (isset($_POST['modifyPassword'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <title>Modify user Password</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 
@@ -42,7 +41,7 @@ if (isset($_POST['modifyPassword'])) {
 
 
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Modify User Password</h1>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Modify User's Password :</h1>
     <div class="mt-5">
         <form method="post" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>">
             <div>
@@ -58,10 +57,15 @@ if (isset($_POST['modifyPassword'])) {
                 <input type="password" name="retypePassword" id="retypePassword" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Retype Password" required>
             </div>
             <div class="mt-3">
-                <button type="submit" name="modifyPassword" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Modify Password</button>
+                <button onclick="return(confirmModify())" type="submit" name="modifyPassword" class="mt-3 w-full px-6 py-3 rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600">Modify Password</button>
             </div>
         </form>
     </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
+    <script>
+        function confirmModify() {
+            return confirm('Are you sure you want to modify this user\'s password?');
+        }
+    </script>
 </body>
 </html>

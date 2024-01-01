@@ -23,5 +23,5 @@ if (isset($_POST['validateappointment'])){
     $req->bindValue(':description', $description);
     $req->bindValue(':status', 'Scheduled');
     $req->execute();
-    header('location: dashboard.php');
+    header('location: dashboard.php?success=true');
 }

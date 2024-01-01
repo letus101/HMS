@@ -76,21 +76,29 @@ if (isset($_POST['prescription_id']) && isset($_POST['drug_id'])) {
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/doctormenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form action="edit_prescription.php" method="post">
+    <form action="edit_prescription.php" method="post" class="space-y-4">
         <input type="hidden" name="prescription_id" value="<?= $prescription_id ?>">
         <input type="hidden" name="drug_id" value="<?= $drug_id ?>">
-        <label for="drugID">Drug (optional):</label><br>
-        <select id="drugID" name="drugID">
-            <option value="">--Select a drug--</option>
-            <?php foreach ($drugs as $drug) { ?>
-                <option value="<?= $drug['drugID'] ?>" <?= $drug['drugID'] == $prescription_details['drugID'] ? 'selected' : '' ?>><?= $drug['drugName'] ?></option>
-            <?php } ?>
-        </select><br>
-        <label for="dose">Dose:</label><br>
-        <input type="text" id="dose" name="dose" value="<?= $prescription_details['dose'] ?>"><br>
-        <label for="frequency">Frequency:</label><br>
-        <input type="text" id="frequency" name="frequency" value="<?= $prescription_details['frequency'] ?>"><br>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Prescription</button>
+        <div class="mt-3">
+            <label for="drugID" class="block text-l mb-2 dark:text-white">Drug (optional):</label>
+            <select id="drugID" name="drugID" class="p-2 border border-gray-300 rounded">
+                <option value="">--Select a drug--</option>
+                <?php foreach ($drugs as $drug) { ?>
+                    <option value="<?= $drug['drugID'] ?>" <?= $drug['drugID'] == $prescription_details['drugID'] ? 'selected' : '' ?>><?= $drug['drugName'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="mt-3">
+            <label for="dose" class="block text-l mb-2 dark:text-white">Dose:</label>
+            <input type="text" id="dose" name="dose" value="<?= $prescription_details['dose'] ?>" class="p-2 border border-gray-300 rounded">
+        </div>
+        <div class="mt-3">
+            <label for="frequency" class="block text-l mb-2 dark:text-white">Frequency:</label>
+            <input type="text" id="frequency" name="frequency" value="<?= $prescription_details['frequency'] ?>" class="p-2 border border-gray-300 rounded">
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="p-2 bg-blue-500 text-white rounded">Update Prescription</button>
+        </div>
     </form>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>

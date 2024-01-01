@@ -51,26 +51,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['firstName'], $_POST['
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/receptionistmenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form action="printinvoice.php" method="post">
-        <label for="firstName">Enter patient's first name:</label><br>
-        <input type="text" id="firstName" name="firstName"><br>
-        <label for="lastName">Enter patient's last name:</label><br>
-        <input type="text" id="lastName" name="lastName"><br>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check</button>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Check Unpaid Visits :</h1>
+    <form action="printinvoice.php" method="post" class="space-y-4 mt-3">
+        <div class="mt-3">
+            <label for="firstName" class="block text-l mb-2 dark:text-white">Enter patient's first name:</label>
+            <input type="text" id="firstName" name="firstName" class="p-2 border border-gray-300 rounded">
+        </div>
+        <div class="mt-3">
+            <label for="lastName" class="block text-l mb-2 dark:text-white">Enter patient's last name:</label>
+            <input type="text" id="lastName" name="lastName" class="p-2 border border-gray-300 rounded">
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="p-2 bg-blue-500 text-white rounded">Check</button>
+        </div>
     </form>
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['firstName'], $_POST['lastName'])): ?>
         <?php if (count($visits) > 0): ?>
-            <h2>Unpaid Visits</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Unpaid Visits</h2>
             <?php foreach ($visits as $visit): ?>
-                <p>Visit ID: <?= $visit['visitID'] ?></p>
-                <p>Visit Date: <?= $visit['visitDate'] ?></p>
-                <form action="payvisit.php" method="post">
+                <p class="text-l dark:text-white">Visit ID: <?= $visit['visitID'] ?></p>
+                <p class="text-l dark:text-white">Visit Date: <?= $visit['visitDate'] ?></p>
+                <form action="payvisit.php" method="post" class="space-y-0.5 mt-3">
                     <input type="hidden" name="visit_id" value="<?= $visit['visitID'] ?>">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Pay</button>
+                    <button type="submit" class="p-2 bg-blue-500 text-white rounded">Pay</button>
                 </form>
             <?php endforeach; ?>
         <?php else: ?>
-            <p>No unpaid visits found for this patient.</p>
+            <p class="text-l dark:text-white">No unpaid visits found for this patient.</p>
         <?php endif; ?>
     <?php endif; ?>
 </div>

@@ -22,7 +22,7 @@ if(isset($_POST['submit'])){
         $req->bindParam(':status', $str);
         $req->execute();
     }
-    header('location: ../Doctor/dashboard.php');
+    header('location: ../Doctor/dashboard.php?success=visit');
     exit();
 }
 ?>
@@ -38,10 +38,16 @@ if(isset($_POST['submit'])){
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/doctormenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form method="post" action="addtest.php">
-        Number of tests: <input type="number" id="numTests" name="numTests" min="1" onchange="addFields()"><br>
-        <div id="testFields"></div>
-        <input type="submit" name="submit">
+    <form method="post" action="addtest.php" class="space-y-4">
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white">Number of tests:
+                <input type="number" id="numTests" name="numTests" min="1" onchange="addFields()" class="p-2 border border-gray-300 rounded">
+            </label>
+        </div>
+        <div id="testFields" class="mt-3"></div>
+        <div class="mt-3">
+            <button type="submit" name="submit" class="p-2 bg-blue-500 text-white rounded">Submit</button>
+        </div>
     </form>
 </div>
 <script>
@@ -52,8 +58,10 @@ if(isset($_POST['submit'])){
         for (var i = 0; i < numTests; i++) {
             var label2 = document.createElement("label");
             label2.innerHTML = "Test " + (i + 1) + " type:";
+            label2.className = "block text-l mb-2 dark:text-white";
             var select = document.createElement("select");
             select.name = "testType[" + i + "]";
+            select.className = "p-2 border border-gray-300 rounded";
             <?php foreach ($types as $type): ?>
             var option = document.createElement("option");
             option.value = "<?= $type['typeID'] ?>";

@@ -14,7 +14,7 @@ $req = $con->prepare("
     JOIN hms.type t on t.typeID = test.typeID
     JOIN hms.appointment a on v.appointmentID = a.appointmentID
     JOIN hms.patient p on a.patientID = p.patientID
-    WHERE test.status = 'Scheduled' AND t.department = 'laboratoy'
+    WHERE test.status = 'Scheduled' AND t.department = 'laboratory' AND v.paid = 'no'
     ORDER BY test.testID
 ");
 $req->execute();
@@ -88,16 +88,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/labtechmenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form action="uploadresult.php" method="post" enctype="multipart/form-data">
-        <label for="test_id">Select a test:</label><br>
-        <select id="test_id" name="test_id">
-            <?php foreach ($tests as $test) { ?>
-                <option value="<?= $test['testID'] ?>"><?= $test['patientName'] . ' - ' . $test['typeName'] ?></option>
-            <?php } ?>
-        </select><br>
-        <label for="file">Upload a PDF file:</label><br>
-        <input type="file" id="file" name="file" accept="application/pdf"><br>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Upload Result</button>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Upload Result</h1>
+    <form action="uploadresult.php" method="post" enctype="multipart/form-data" class="space-y-4 mt-3">
+            <?php if (!empty($tests)): ?>
+            <div class="mt-3">
+                <label for="test_id" class="block text-l mb-2 dark:text-white">Select a test:</label>
+                <select id="test_id" name="test_id" class="p-3 border border-gray-300 rounded">
+                    <?php foreach ($tests as $test): ?>
+                        <option value="<?= $test['testID'] ?>"><?= $test['patientName'] . ' - ' . $test['typeName'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+                <div class="mt-3">
+                    <label for="file" class="block text-l mb-2 dark:text-white">Upload a PDF file:</label>
+                    <input type="file" id="file" name="file" accept="application/pdf" class="p-2 border border-gray-300 rounded">
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="p-2 bg-blue-500 text-white rounded">Upload Result</button>
+                </div>
+            <?php else: ?>
+                <p class="text-l dark:text-white">No Scheduled tests available.</p>
+            <?php endif; ?>
     </form>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>

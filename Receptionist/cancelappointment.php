@@ -21,7 +21,7 @@ if (isset($_POST['searchPatient'])) {
     $patient = $req->fetch();
 
     if ($patient) {
-        $req = $con->prepare("SELECT * FROM appointment WHERE patientID = :patientID AND status != 'Cancelled' AND  status != 'Completed'");
+        $req = $con->prepare("SELECT * FROM appointment WHERE patientID = :patientID AND status ='Scheduled'");
         $req->bindValue(':patientID', $patient['patientID']);
         $req->execute();
         $appointments = $req->fetchAll();
@@ -33,6 +33,7 @@ if (isset($_POST['cancelAppointment'])) {
     $req = $con->prepare("UPDATE appointment SET status = 'Canceled' WHERE appointmentID = :appointmentID");
     $req->bindValue(':appointmentID', $appointmentID);
     $req->execute();
+    echo "<script>alert('Appointment canceled successfully')</script>";
 }
 ?>
 <!DOCTYPE html>
@@ -47,10 +48,21 @@ if (isset($_POST['cancelAppointment'])) {
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/receptionistmenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
+    <h1 class="text-3xl font-bold">Cancel an Appointment</h1>
     <form method="POST" class="space-y-4">
-        <input type="text" name="firstName" placeholder="First Name" required class="p-2 border border-gray-300 rounded">
-        <input type="text" name="lastName" placeholder="Last Name" required class="p-2 border border-gray-300 rounded">
-        <button type="submit" name="searchPatient" class="p-2 bg-blue-500 text-white rounded">Search Patient</button>
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Patient First Name:
+                <input type="text" name="firstName" placeholder="First Name" required class="p-2 border border-gray-300 rounded">
+            </label>
+        </div>
+        <div class="mt-3">
+            <label class="block text-l mb-2 dark:text-white"> Patient Last Name:
+                <input type="text" name="lastName" placeholder="Last Name" required class="p-2 border border-gray-300 rounded">
+            </label>
+        </div>
+        <div class="mt-3">
+            <button type="submit" name="searchPatient" class="p-2 bg-blue-500 text-white rounded">Search Patient</button>
+        </div>
     </form>
     <?php if ($patient): ?>
         <h2 class="text-2xl font-bold mt-6">Appointments for <?= $patient['firstName'] . ' ' . $patient['lastName'] ?>:</h2>
@@ -70,7 +82,7 @@ if (isset($_POST['cancelAppointment'])) {
                     <td class="p-2 border border-gray-300"><?= $appointment['userID'] ?></td>
                     <td class="p-2 border border-gray-300">
                         <form method="POST">
-                            <button type="submit" name="cancelAppointment" value="<?= $appointment['appointmentID'] ?>" class="p-2 bg-blue-600 text-white rounded">Cancel</button>
+                            <button onclick="return(confirmcancel())" type="submit" name="cancelAppointment" value="<?= $appointment['appointmentID'] ?>" class="p-2 bg-blue-600 text-white rounded">Cancel</button>
                         </form>
                     </td>
                 </tr>
@@ -79,5 +91,10 @@ if (isset($_POST['cancelAppointment'])) {
     <?php endif; ?>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
+<script>
+    function confirmcancel() {
+        return confirm('Are you sure you want to cancel this appointment?');
+    }
+</script>
 </body>
 </html>

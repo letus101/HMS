@@ -138,4 +138,4 @@ insert into role(roleName,roleDescription) values('Admin','Admin'),
                                                  ('Radiologist','Radiologist')
                                                  ;
 insert into user(firstName,lastName,Phone,Address,username,passwordHash,image,roleID)
-values('jhon','doe','0625658456','Admin','admin','$2y$10$YYDQwvKyNxVyyqxURB3L6eUEzNVIAss8CNzusM2ata0wzFsG8.XHS','Admin.jpg',1);
+values('jhon','doe','0625658456','Admin','admin','$2y$10$ri9EqiMB.g/.iJlRthReAeGbBbw8bQGhQrwen4xLCmDRsi6OhEvpC','Admin.jpg',1);

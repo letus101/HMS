@@ -41,6 +41,10 @@ if (isset($_POST['addAppointment'])) {
     $req->bindValue(':appointmentTime', $appointmentTime);
     $req->execute();
     $doctors = $req->fetchAll();
+if (!($doctors)) {
+        header('location: addappointment.php?error=doctornotfound');
+        exit();
+    }
 
 ?>
 
@@ -56,10 +60,11 @@ if (isset($_POST['addAppointment'])) {
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/receptionistmenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Choose Doctor</h1>
     <form action="validate.php" method="post">
-        <div>
-            <label class="block text-2xl mb-2 dark:text-white"> available doctors :
-                <select name="doctor" class="mt-1.5 py-3 px-4 pe-9 block w-full border-gray-200 rounded-full text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
+        <div class="mt-3">
+            <label class="block text-m mb-2 dark:text-white"> available doctors :
+                <select name="doctor" class="mt-1.5 py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
                     <?php
                     foreach ($doctors as $doctor) { // Loop through all doctors
                         echo "<option value='".$doctor['userID']."'>".$doctor['firstName']." ".$doctor['lastName']."</option>";
@@ -70,10 +75,15 @@ if (isset($_POST['addAppointment'])) {
         </div>
         <div class="mt-3">
             <button type="button" name="goBack" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onclick="window.location.href='addappointment.php'">Go Back</button>
-            <button type="submit" name="validateappointment" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Add Appointment</button>
+            <button onclick="return(confirmAddAppointment())" type="submit" name="validateappointment" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Add Appointment</button>
         </div>
     </form>
 </div>
 <script src="../node_modules/preline/dist/preline.js"></script>
+<script>
+    function confirmAddAppointment() {
+        return confirm("Are you sure you want to add this appointment?");
+    }
+</script>
 </body>
 </html>

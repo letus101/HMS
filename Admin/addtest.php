@@ -26,6 +26,7 @@ if (isset($_POST['addTest'])) {
         $req->bindValue(':testName', $testName);
         $req->bindValue(':department', $department);
         $req->execute();
+        echo "<script>alert('The test has been added successfully.');</script>";
     }
 }
 ?>
@@ -35,7 +36,7 @@ if (isset($_POST['addTest'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <title>Add a test:</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
 </head>
 
@@ -48,13 +49,13 @@ if (isset($_POST['addTest'])) {
     <div class="mt-5">
         <form method="post" action="<?= htmlentities($_SERVER['PHP_SELF']) ?>">
             <div>
-                <label for="testName" class="block text-sm mb-2 dark:text-white">Test Name</label>
+                <label for="testName" class="block text-sm mb-2 dark:text-white">Test Name :</label>
                 <input type="text" name="testName" id="testName" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Test Name" required>
             </div>
             <div class="mt-3">
-                <label for="department" class="block text-sm mb-2 dark:text-white">Department</label>
+                <label for="department" class="block text-sm mb-2 dark:text-white">Department :</label>
                 <select name="department" id="department" class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" required>
-                    <option value="laboratoy">Laboratoy</option>
+                    <option value="laboratory">Laboratory</option>
                     <option value="radiology">Radiology</option>
                 </select>
             </div>

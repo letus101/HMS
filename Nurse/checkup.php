@@ -17,7 +17,7 @@ $req = $con->prepare("
         SELECT dailycheckup.inpatientID
         FROM dailycheckup
         WHERE DATE(dailycheckup.checkupDate) = CURDATE()
-    )
+    ) AND  inpatient.status = 'Admitted'
 ");
 $req->execute();
 $inpatients = $req->fetchAll();
@@ -67,47 +67,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inpatient_id'], $_POS
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHECK UP</title>
     <link href="../Assets/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 </head>
 <body class="bg-gray-50 dark:bg-slate-900">
 <?php require '../Assets/components/header.php'?>
 <?php require '../Assets/components/nursemenu.php'?>
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-    <form action="checkup.php" method="post" id="checkupForm">
-        <label for="inpatient_id">Select an inpatient:</label><br>
-        <select id="inpatient_id" name="inpatient_id">
-            <?php foreach ($inpatients as $inpatient) { ?>
-                <option value="<?= $inpatient['inpatientID'] ?>"><?= $inpatient['patientName'] ?></option>
-            <?php } ?>
-        </select><br>
-        <label for="vital_id">Select vitals:</label><br>
-        <select id="vital_id" name="vital_id[]" multiple>
-            <?php foreach ($vitals as $vital) { ?>
-                <option value="<?= $vital['vitalID'] ?>"><?= $vital['vitalName'] ?></option>
-            <?php } ?>
-        </select><br>
-        <div id="vitalValues"></div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Check Up</h1>
+    <form action="checkup.php" method="post" id="checkupForm" class="space-y-4">
+        <div class="mt-3">
+            <label for="inpatient_id" class="block text-l mb-2 dark:text-white">Select an inpatient:</label>
+            <select id="inpatient_id" name="inpatient_id" class="p-3 border border-gray-300 rounded">
+                <?php foreach ($inpatients as $inpatient) { ?>
+                    <option value="<?= $inpatient['inpatientID'] ?>"><?= $inpatient['patientName'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="mt-3">
+            <label for="vital_id" class="block text-l mb-2 dark:text-white">Select vitals:</label>
+            <select id="vital_id" name="vital_id[]" multiple class="w-full p-2 border border-gray-300 rounded bg-white text-gray-700 ">
+                <?php foreach ($vitals as $vital) { ?>
+                    <option value="<?= $vital['vitalID'] ?>"><?= $vital['vitalName'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div id="vitalValues" class="mt-3"></div>
+        <div class="mt-3">
+            <button type="submit" class="p-2 bg-blue-500 text-white rounded">Submit</button>
+        </div>
     </form>
 </div>
-<script src="../node_modules/preline/dist/preline.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
-    document.getElementById('vital_id').addEventListener('change', function() {
-        var vitalValues = document.getElementById('vitalValues');
-        vitalValues.innerHTML = '';
-        for (var i = 0; i < this.selectedOptions.length; i++) {
-            var option = this.selectedOptions[i];
-            var label = document.createElement('label');
-            label.htmlFor = 'vital_value_' + option.value;
-            label.textContent = 'Enter value for ' + option.text + ':';
-            var input = document.createElement('input');
-            input.type = 'text';
-            input.id = 'vital_value_' + option.value;
-            input.name = 'vital_values[' + option.value + ']';
-            vitalValues.appendChild(label);
-            vitalValues.appendChild(input);
-            vitalValues.appendChild(document.createElement('br'));
-        }
+    var choices = new Choices('#vital_id', {
+        searchEnabled: true,
+        removeItemButton: true,
     });
+
+    choices.passedElement.element.addEventListener('change', addFields, false);
+
+    function addFields() {
+        var select = document.getElementById("vital_id");
+        var container = document.getElementById("vitalValues");
+        container.innerHTML = "";
+        for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].selected) {
+                var label = document.createElement("label");
+                label.innerHTML = "Enter value for " + select.options[i].text + ":";
+                label.className = "block text-l mb-2 dark:text-white";
+                var input = document.createElement("input");
+                input.type = "text";
+                input.name = "vital_values[" + select.options[i].value + "]";
+                input.className = "w-full p-2 border border-gray-300 rounded bg-white text-gray-700";
+                container.appendChild(label);
+                container.appendChild(input);
+            }
+        }
+    }
 </script>
+<script src="../node_modules/preline/dist/preline.js"></script>
 </body>
 </html>
