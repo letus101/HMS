@@ -2,7 +2,7 @@
 
 ## Project Setup
 
-For a detailed guide on how to set up this project, please follow the instructions in this [YouTube video](https://www.youtube.com/link-to-your-video).
+For a detailed guide on how to set up this project, please follow the instructions in this [YouTube video](https://youtu.be/Dc0QN5N-wzQ).
 
 ## Connection Information
 
