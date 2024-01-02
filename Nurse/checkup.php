@@ -4,7 +4,7 @@ if (!($_SESSION['role'] == 'Nurse')) {
     header('location: ../error403.php');
     exit();
 }
-
+$nurseID = $_SESSION['id'];
 require_once '../config/cnx.php';
 $con = cnx_pdo();
 
@@ -40,10 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inpatient_id'], $_POS
     }
     // Insert the checkup date, checkup time, and inpatient ID into the dailycheckup table
     $req = $con->prepare("
-        INSERT INTO dailycheckup (inpatientID, checkupDate, checkupTime)
-        VALUES (:inpatient_id, CURDATE(), CURTIME())
+        INSERT INTO dailycheckup (inpatientID, checkupDate, checkupTime,userID)
+        VALUES (:inpatient_id, CURDATE(), CURTIME(), :nurseID)
     ");
     $req->bindValue(':inpatient_id', $inpatient_id);
+    $req->bindValue(':nurseID', $nurseID);
     $req->execute();
 
     // Get the ID of the inserted checkup
