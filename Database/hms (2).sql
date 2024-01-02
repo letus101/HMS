@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2024 at 11:13 PM
+-- Generation Time: Jan 02, 2024 at 12:57 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -47,7 +47,8 @@ CREATE TABLE `dailycheckup` (
   `checkupID` int(11) NOT NULL,
   `checkupDate` date NOT NULL,
   `checkupTime` time NOT NULL,
-  `inpatientID` int(11) NOT NULL
+  `inpatientID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -144,8 +145,8 @@ CREATE TABLE `prices` (
 
 INSERT INTO `prices` (`priceID`, `itemName`, `price`) VALUES
 (1, 'visit', 300.00),
-(2, 'test', 3000.00),
-(3, 'dailyHospitalStay', 1000.00);
+(2, 'test', 200.00),
+(3, 'dailyHospitalStay', 500.00);
 
 -- --------------------------------------------------------
 
@@ -191,9 +192,9 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`stockID`, `drugID`, `quantity`, `expiryDate`, `arrivalDate`) VALUES
-(1, 1, 6, '2024-07-28', '2023-12-30'),
+(1, 1, 5, '2024-07-28', '2023-12-30'),
 (3, 2, 13, '2026-11-28', '2023-12-30'),
-(4, 3, 2, '2025-11-29', '2023-12-30'),
+(4, 3, 1, '2025-11-29', '2023-12-30'),
 (5, 1, 30, '2025-12-30', '2023-12-30');
 
 -- --------------------------------------------------------
@@ -258,14 +259,12 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`userID`, `firstName`, `lastName`, `Phone`, `Address`, `username`, `passwordHash`, `image`, `status`, `roleID`) VALUES
 (1, 'jhon', 'doe', '0625658456', 'Admin', 'admin', '$2y$10$ri9EqiMB.g/.iJlRthReAeGbBbw8bQGhQrwen4xLCmDRsi6OhEvpC', 'admin.jpg', 'active', 1),
-(2, 'jack', 'brian', '0623541256', 'washington street', 'jack.brian', '$2y$10$K5ZCEwz0QMxBc4lUfdkdnegGDfKVVP/ZnPdxQCPRgYjxn7o/l0tLC', 'jack.brian.jpg', 'active', 2),
-(3, 'test', 'test', '323236465', 'midls', 'test.test', '$2y$10$9UItExiHjguw5IsXjnruROAW6Nbuv1cR70s9xy5QSmMVFEU1d2shK', 'test.test.jpeg', 'canceled', 2),
-(4, 'sara', 'sara', '0623568456', 'jamaica', 'sara.sara', '$2y$10$5gd66Ig.WdYIifx.qCA7w.qlXa4SLRoIG9E93SipnlkxLgDbjW5Q6', 'sara.sara.jpg', 'active', 4),
-(5, 'radio', 'test', '0699274949', 'test', 'radio.test', '$2y$10$X.uFhXkEpfIRcRvyT.mbcu4K80D6OTuNhKfufVObamtKec1NmI2Yq', 'radio.test.jpg', 'active', 7),
-(6, 'labo', 'test', '0699274949', 'test', 'labo.test', '$2y$10$fgoaI6SEnG6Xk9JJMM.gEeQukCeAGv6WzQ30qY1c/TEObN/te8ZMW', 'labo.test.jpg', 'active', 6),
-(7, 'pharma', 'test', '0699274949', 'test', 'pharma.test', '$2y$10$LEd/oLaZcT12QEy1T7nBvesRfnHBcmQsJQ0kzs9X3I3wAIa7cQEGG', 'pharma.test.jpg', 'active', 5),
-(8, 'nurse', 'test', '0699274949', 'test', 'nurse.test', '$2y$10$uz9tp11tbq3t9xJo4tx/k.ZkYwyVq08z9PxQ8wMlqDRYx7fumkFKO', 'nurse.test.jpg', 'active', 3),
-(9, 'test', 'test', '0699274949', 'BD reb7awi', 'test.test@hospitalink.com', '$2y$10$PT0V1Y84vqwitB31qVj8W.pP4lkn/ffwheERzt2JuSTkBBZsUcYCO', 'test.test@hospitalink.com.jpeg', 'canceled', 2);
+(10, 'recep', 'test', '0600000000', 'test', 'recep.test@hospitalink.com', '$2y$10$YG6KZ.I.VYIZJkqryNJpPu3L6wEf7Vt59U9Y8kDNEgNQkJ.dzQh5q', 'recep.test@hospitalink.com.jpg', 'active', 4),
+(11, 'doc', 'test', '0611111111', 'test', 'doc.test@hospitalink.com', '$2y$10$SACpmSJWVQhA2ClFSp3UyOhwfOO76lMEytcg0vJLIeuaB9sJvAOdi', 'doc.test@hospitalink.com.jpg', 'active', 2),
+(12, 'nurse', 'test', '0622222222', 'test', 'nurse.test@hospitalink.com', '$2y$10$sIKWHGwQwWQ8dtzni1ywjOU12UfuKrNwZTDdor21E7mkCHQ2TkBzy', 'nurse.test@hospitalink.com.jpg', 'active', 3),
+(13, 'lab', 'test', '0633333333', 'test', 'lab.test@hospitalink.com', '$2y$10$kUwrjdO.ZF7qmzh6oXb8LO6J5Sc6v4AEPReIST/Mrwyaz9FBXCyeS', 'lab.test@hospitalink.com.jpg', 'active', 6),
+(14, 'rad', 'test', '0655555555', 'test', 'rad.test@hospitalink.com', '$2y$10$RuSrPCcixmfODrGzECg.wuFFdGBzdpv5Upn6ci6ruDWP26pngG8oO', 'rad.test@hospitalink.com.jpg', 'active', 7),
+(15, 'phar', 'test', '0688888888', 'test', 'phar.test@hospitalink.com', '$2y$10$RxPfY4WrguXJgfx/4gc9mu1QzjMsAW7D4NvLtXVvL5Pa44tr6hlNC', 'phar.test@hospitalink.com.jpg', 'active', 5);
 
 -- --------------------------------------------------------
 
@@ -330,7 +329,8 @@ ALTER TABLE `appointment`
 --
 ALTER TABLE `dailycheckup`
   ADD PRIMARY KEY (`checkupID`),
-  ADD KEY `inpatientID` (`inpatientID`);
+  ADD KEY `inpatientID` (`inpatientID`),
+  ADD KEY `FK3` (`userID`);
 
 --
 -- Indexes for table `drug`
@@ -500,7 +500,7 @@ ALTER TABLE `type`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `visit`
@@ -529,6 +529,7 @@ ALTER TABLE `appointment`
 -- Constraints for table `dailycheckup`
 --
 ALTER TABLE `dailycheckup`
+  ADD CONSTRAINT `FK3` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`),
   ADD CONSTRAINT `dailycheckup_ibfk_1` FOREIGN KEY (`inpatientID`) REFERENCES `inpatient` (`inpatientID`);
 
 --
