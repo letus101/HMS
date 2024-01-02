@@ -30,7 +30,6 @@ if (isset($_POST['prescription_id']) && isset($_POST['drug_id'])) {
         $new_drugID = $_POST['drugID'] != "" ? $_POST['drugID'] : $prescription_details['drugID'];
 
         if ($new_drugID == $prescription_details['drugID']) {
-            // If the drug ID is the same, update only the dose and frequency
             $req = $con->prepare("
                 UPDATE prescriptiondetails
                 SET dose = :dose, frequency = :frequency
@@ -42,7 +41,6 @@ if (isset($_POST['prescription_id']) && isset($_POST['drug_id'])) {
             $req->bindValue(':drugID', $new_drugID);
             $req->execute();
         } else {
-            // If the drug ID is different, update all fields
             $req = $con->prepare("
                 UPDATE prescriptiondetails
                 SET drugID = :new_drugID, dose = :dose, frequency = :frequency

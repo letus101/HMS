@@ -17,7 +17,6 @@ if (isset($_POST['addPatient'])) {
     $phone = $_POST['phone'];
     $address = $_POST['address'];
 
-    // Check if the patient already exists
     $req = $con->prepare("SELECT * FROM patient WHERE firstName = :firstName AND lastName = :lastName AND dateOfBirth = :dateOfBirth");
     $req->bindValue(':firstName', $firstName);
     $req->bindValue(':lastName', $lastName);

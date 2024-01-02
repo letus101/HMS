@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['firstName'], $_POST['
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
 
-    // Fetch the patient ID
     $req = $con->prepare("
         SELECT patientID
         FROM patient
@@ -25,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['firstName'], $_POST['
     $patient = $req->fetch();
 
     if ($patient) {
-        // Fetch the visits
         $req = $con->prepare("
             SELECT *
             FROM visit 

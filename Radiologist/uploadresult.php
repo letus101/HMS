@@ -24,19 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
     $test_id = $_POST['test_id'];
     $file = $_FILES['file'];
 
-    // Validate the uploaded file
     if ($file['type'] != 'application/pdf') {
         echo "Invalid file type. Please upload a PDF file.";
         exit;
     }
 
-    // Move the uploaded file to the /storage/tests directory
     $destination = '../storage/tests/' . $file['name'];
     if (!move_uploaded_file($file['tmp_name'], $destination)) {
         echo "Failed to upload file.";
         exit;
     }
-    //find the typeNAme
     $req = $con->prepare("
         SELECT type.typeName
         FROM test
@@ -46,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
     $req->bindValue(':test_id', $test_id);
     $req->execute();
     $type = $req->fetch();
-    //find the patientName
     $req = $con->prepare("
         SELECT concat(patient.firstName,' ',patient.lastName) AS patientName
         FROM test
@@ -58,11 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
     $req->bindValue(':test_id', $test_id);
     $req->execute();
     $patient = $req->fetch();
-    // Rename the file
     $new_filename = 'radiology-'.$type['typeName']."-".$patient['patientName']."-".date('Ymd'). '.pdf';
     rename($destination, '../storage/tests/' . $new_filename);
 
-    // Update the testResult, status, and testDate fields in the test table
     $req = $con->prepare("
         UPDATE test
         SET testResult = :testResult, status = 'Completed', testDate = CURDATE()
@@ -75,8 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_id'], $_FILES['f
     header('Location: dashboard.php');
     exit;
 }
-?><?php
-// Existing PHP code
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full">

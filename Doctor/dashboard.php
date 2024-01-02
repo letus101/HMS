@@ -6,7 +6,7 @@ if (!($_SESSION['role'] == 'Doctor')) {
 }
 require_once '../config/cnx.php';
 $con = cnx_pdo();
-$doctorID = $_SESSION['id']; // Assuming the doctor's ID is stored in the session
+$doctorID = $_SESSION['id'];
 $req = $con->prepare("SELECT appointment.*, CONCAT(patient.firstName, ' ', patient.lastName) as patientName FROM appointment
                       JOIN patient ON appointment.patientID = patient.patientID
                       WHERE appointment.userID = :doctorID  AND appointment.status = 'Scheduled'");
@@ -50,7 +50,6 @@ if (isset($_GET['success']) && $_GET['success'] == 'visit') {
                         <?php } ?>
                     ]
                 });
-
                 calendar.render();
             });
     </script>

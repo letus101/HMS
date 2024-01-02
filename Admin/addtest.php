@@ -12,7 +12,7 @@ if (isset($_POST['addTest'])) {
     $testName = $_POST['testName'];
     $department = $_POST['department'];
 
-    // Check if the testName already exists
+
     $req = $con->prepare("SELECT * FROM type WHERE typeName = :testName");
     $req->bindValue(':testName', $testName);
     $req->execute();
@@ -21,7 +21,7 @@ if (isset($_POST['addTest'])) {
     if ($existingTest) {
         echo "<script>alert('The test name already exists.');</script>";
     } else {
-        // Insert the new testName and department
+
         $req = $con->prepare("INSERT INTO type (typeName, department) VALUES (:testName, :department)");
         $req->bindValue(':testName', $testName);
         $req->bindValue(':department', $department);

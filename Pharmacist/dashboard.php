@@ -7,28 +7,24 @@ if (!($_SESSION['role'] == 'Pharmacist')) {
     require_once '../config/cnx.php';
     $con = cnx_pdo();
 
-// Number of drugs
     $req = $con->query("SELECT COUNT(*) as count FROM drug");
     $drugCount = $req->fetch()['count'];
     if ($drugCount == null) {
         $drugCount = 0;
     }
 
-// Total quantity of all drugs
     $req = $con->query("SELECT SUM(quantity) as total FROM stock");
     $totalQuantity = $req->fetch()['total'];
     if ($totalQuantity == null) {
         $totalQuantity = 0;
     }
 
-// Number of expired drugs
 $req = $con->query("SELECT SUM(quantity) as total FROM stock WHERE expiryDate < CURDATE()");
 $expiredQuantity = $req->fetch()['total'];
 if ($expiredQuantity == null) {
     $expiredQuantity = 0;
 }
 
-// name of expired drugs in an arrival
 $req = $con->query("SELECT drug.drugName, stock.expiryDate,stockID,arrivalDate FROM drug INNER JOIN stock ON drug.drugID = stock.drugId WHERE stock.expiryDate < CURDATE()");
 $expiredDrugs = $req->fetchAll();
 ?>

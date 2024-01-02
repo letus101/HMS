@@ -8,7 +8,6 @@ $nurseID = $_SESSION['id'];
 require_once '../config/cnx.php';
 $con = cnx_pdo();
 
-// Fetch all inpatients who have not been checked up today
 $req = $con->prepare("
     SELECT inpatient.*, concat(patient.firstName,' ',patient.lastName) AS patientName
     FROM inpatient
@@ -22,7 +21,6 @@ $req = $con->prepare("
 $req->execute();
 $inpatients = $req->fetchAll();
 
-// Fetch all vitals from the vitals table
 $req = $con->prepare("SELECT * FROM vitals");
 $req->execute();
 $vitals = $req->fetchAll();
@@ -31,14 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inpatient_id'], $_POS
     $inpatient_id = $_POST['inpatient_id'];
     $vital_values = $_POST['vital_values'];
 
-    // Validate the input data
     foreach ($vital_values as $value) {
         if (!is_numeric($value)) {
             echo "Invalid value. Please enter a number.";
             exit;
         }
     }
-    // Insert the checkup date, checkup time, and inpatient ID into the dailycheckup table
     $req = $con->prepare("
         INSERT INTO dailycheckup (inpatientID, checkupDate, checkupTime,userID)
         VALUES (:inpatient_id, CURDATE(), CURTIME(), :nurseID)
@@ -47,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inpatient_id'], $_POS
     $req->bindValue(':nurseID', $nurseID);
     $req->execute();
 
-    // Get the ID of the inserted checkup
     $checkup_id = $con->lastInsertId();
     foreach ($vital_values as $vital_id => $value) {
         $req = $con->prepare("

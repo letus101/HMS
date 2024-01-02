@@ -20,9 +20,7 @@ $req = $con->prepare("
 $req->execute();
 $tests = $req->fetchAll();
 ?>
-<?php
-// Existing PHP code
-?>
+
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>

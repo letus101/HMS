@@ -8,7 +8,6 @@ if (!($_SESSION['role'] == 'Receptionist')) {
 require_once '../config/cnx.php';
 $con = cnx_pdo();
 
-// Fetch the prices from the prices table
 $req = $con->prepare("SELECT * FROM prices");
 $req->execute();
 $prices = $req->fetchAll(PDO::FETCH_ASSOC);
@@ -17,7 +16,6 @@ $prices = array_column($prices, 'price', 'itemName');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
     $visitID = $_POST['visit_id'];
 
-    // Fetch the prescription for the visit
     $req = $con->prepare("
         SELECT prescription.*
         FROM prescription
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
     $prescriptions = $req->fetch();
 
     if ($prescriptions) {
-        // Fetch the total price of the prescribed drugs
         $req = $con->prepare("
             SELECT SUM(d.drugPrice) as total
             FROM prescriptiondetails
@@ -42,22 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
         $totaldrugs['total'] = 0;
     }
 
-    // Fetch the number of tests for the visit
     $req = $con->prepare("SELECT count(*) as numberoftests FROM test WHERE visitID = :visit_id");
     $req->bindValue(':visit_id', $visitID);
     $req->execute();
     $numberoftests = $req->fetch();
 
-    // Calculate the total price of the tests
     $totaltests = $numberoftests['numberoftests'] * $prices['test'];
 
-    // Fetch the patient ID for the visit
     $req = $con->prepare("SELECT patientID FROM visit JOIN hms.appointment a on a.appointmentID = visit.appointmentID WHERE visitID = :visit_id");
     $req->bindValue(':visit_id', $visitID);
     $req->execute();
     $patientID = $req->fetch();
 
-    // Fetch the admission date for the patient
     $req = $con->prepare("SELECT admissionDate FROM inpatient WHERE patientID = :patient_id");
     $req->bindValue(':patient_id', $patientID['patientID']);
     $req->execute();
@@ -66,14 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
         $admissionDate['admissionDate'] = date("Y-m-d");
     }
 
-    // Calculate the number of days the patient has been in the hospital and the total price for the days
     $numberofdays = (strtotime(date("Y-m-d")) - strtotime($admissionDate['admissionDate'])) / (60 * 60 * 24);
     $totaldays = $numberofdays * $prices['dailyHospitalStay'];
 
-    // Calculate the total price to pay
     $total = $totaldrugs['total'] + $totaltests + $totaldays+ $prices['visit'];
 
-    // Update the paid attribute of the visit
     $req = $con->prepare("
         UPDATE visit
         SET paid = 'yes'
@@ -82,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
     $req->bindValue(':visit_id', $visitID);
     $req->execute();
 
-    //discharge the patient
     $req = $con->prepare("
         UPDATE inpatient
         SET status = 'discharged'
@@ -91,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['visit_id'])) {
     $req->bindValue(':patient_id', $patientID['patientID']);
     $req->execute();
 
-    // Fetch the patient's name
     $req = $con->prepare("
         SELECT firstName, lastName
         FROM patient
