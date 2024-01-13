@@ -54,3 +54,4 @@ The database for this project is stored in the `Database/hms(2).sql` file. The d
 - example prices for visit,tests,hospitalization
 
 For more detailed information, please refer to the `Database/hms(2).sql` file.
+[![Quality Gate Status](http://localhost:9000/api/project_badges/measure?project=HMS&metric=alert_status&token=sqb_08fc1b1fccb04065c3166e36a1836d252992bf14)](http://localhost:9000/dashboard?id=HMS)
